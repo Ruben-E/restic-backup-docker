@@ -31,7 +31,7 @@ logLast "RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}"
 logLast "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 
 # Do not save full backup log to logfile but to backup-last.log
-restic backup /data ${RESTIC_JOB_ARGS} --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
+restic backup /data ${RESTIC_JOB_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list" --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
 backupRC=$?
 logLast "Finished backup at $(date)"
 if [[ $backupRC == 0 ]]; then
