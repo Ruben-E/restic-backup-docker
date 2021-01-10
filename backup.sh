@@ -31,7 +31,7 @@ logLast "RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}"
 logLast "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 
 # Do not save full backup log to logfile but to backup-last.log
-restic backup /data ${RESTIC_JOB_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list --b2-endpoint=https://s3.eu-central-003.backblazeb2.com" --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
+restic backup /data ${RESTIC_JOB_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list --transfers=32 --b2-endpoint=https://s3.eu-central-003.backblazeb2.com" --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} >> ${lastLogfile} 2>&1
 backupRC=$?
 logLast "Finished backup at $(date)"
 if [[ $backupRC == 0 ]]; then
@@ -44,7 +44,7 @@ fi
 
 if [[ $backupRC == 0 ]] && [ -n "${RESTIC_FORGET_ARGS}" ]; then
     echo "Forget about old snapshots based on RESTIC_FORGET_ARGS = ${RESTIC_FORGET_ARGS}"
-    restic forget ${RESTIC_FORGET_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list --b2-endpoint=https://s3.eu-central-003.backblazeb2.com" >> ${lastLogfile} 2>&1
+    restic forget ${RESTIC_FORGET_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list --transfers=32 --b2-endpoint=https://s3.eu-central-003.backblazeb2.com" >> ${lastLogfile} 2>&1
     rc=$?
     logLast "Finished forget at $(date)"
     if [[ $rc == 0 ]]; then
