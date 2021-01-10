@@ -44,7 +44,7 @@ fi
 
 if [[ $backupRC == 0 ]] && [ -n "${RESTIC_FORGET_ARGS}" ]; then
     echo "Forget about old snapshots based on RESTIC_FORGET_ARGS = ${RESTIC_FORGET_ARGS}"
-    restic forget ${RESTIC_FORGET_ARGS} >> ${lastLogfile} 2>&1
+    restic forget ${RESTIC_FORGET_ARGS} -o rclone.args="serve restic --stdio --b2-hard-delete --drive-use-trash=false --fast-list" >> ${lastLogfile} 2>&1
     rc=$?
     logLast "Finished forget at $(date)"
     if [[ $rc == 0 ]]; then
