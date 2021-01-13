@@ -62,7 +62,7 @@ echo "Finished Backup at $(date +"%Y-%m-%d %H:%M:%S") after $((end-start)) secon
 if [ -n "${TEAMS_WEBHOOK_URL}" ]; then
     teamsTitle="Restic Last Backup Log"
     teamsMessage=$( cat ${lastLogfile} | sed 's/"/\"/g' | sed "s/'/\'/g" | sed ':a;N;$!ba;s/\n/\n\n/g' )
-    teamsReqBody="{\"title\": \"${teamsTitle}\", \"text\": \"${teamsMessage}\" }"
+    teamsReqBody="{\"content\": \"${teamsMessage}\" }"
     sh -c "curl -H 'Content-Type: application/json' -d '${teamsReqBody}' '${TEAMS_WEBHOOK_URL}' > ${lastMicrosoftTeamsLogfile} 2>&1"
     if [ $? == 0 ]; then
         echo "Microsoft Teams notification successfully sent."
